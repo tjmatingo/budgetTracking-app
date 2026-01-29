@@ -36,7 +36,7 @@ class stipendListView(ListView):
     model = Stipend
     template_name = 'budgetrack/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'stipends'
-    ordering = ['-published_date']
+
 
     
 
@@ -57,7 +57,7 @@ class expenseListView(ListView):
     model = Expense
     template_name = 'budgetrack/home.html'
     context_object_name = 'expenses'
-
+    ordering = ['-date_incurred']
 class expenseUpdateView(UpdateView):
     model = Expense
     fields = ['description', 'amount', 'date_incurred']

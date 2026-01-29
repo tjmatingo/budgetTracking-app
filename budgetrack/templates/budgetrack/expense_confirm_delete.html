@@ -1,0 +1,14 @@
+{% extends "budgetize/base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="content-section mt-4">
+        <h2 class="mb-4">Delete Expense</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <h2>Are you sure you want to delete the expense  "{{ object.description }}"?</h2>
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a href="{% url 'expense-detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+{% endblock content %} 

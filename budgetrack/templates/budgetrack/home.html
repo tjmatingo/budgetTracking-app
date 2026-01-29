@@ -1,0 +1,28 @@
+{% extends "budgetrack/base.html" %}
+
+{% block title %}
+    {{title}}
+{% endblock title %}
+        
+{% block content %}
+        <h1>Welcome to the Budget Tracker Page</h1>
+
+        
+        {% for exp in expenses %}
+            <article class="media content-section">
+                <div class="media-body">     
+                    <div class="article-metadata">
+                        <small class="text-muted">{{ exp.date_incurred|date:"N d, Y" }}</small>
+                    </div>
+                    <p class="article-content">{{ exp.amount }}</p>
+                    <br>
+                    <h2><a class="article-title" href="{% url 'post-detail' exp.pk %}">{{ exp.description }}</a></h2>
+                    
+                </div>
+            </article>
+            
+        {% endfor %}
+        
+
+        
+{% endblock content %}

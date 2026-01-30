@@ -8,12 +8,12 @@ body {
     padding: 2px;
 }
 
-h2, h1, a, ul, li, p, small{
+h2, h1, h3, a, ul, li, p, small{
     color: aquamarine;
 }
 
 h5 {
-    color: rgb(210, 106, 106);
+    color: rgb(218, 123, 123);
 }
 
 .btn {
@@ -22,8 +22,6 @@ h5 {
     background-color: aquamarine;
     color: blue;
     text-decoration: none;
-    margin-right: 1rem;
-
 }
 
 .btn-sec {
@@ -37,12 +35,17 @@ h5 {
 }
 
 .home-buttons {
-    margin: 2rem;
+    margin: 1rem;
     display: flex;
     justify-content: center;
-    flex-direction: row-reverse;
+    flex-direction: row;
+    gap: 2rem;
 }
 
+a {
+    text-decoration: none;
+    text-align: center;
+}
 .stipend-section {
     display: flex;
     flex-direction: row;

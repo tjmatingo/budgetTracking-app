@@ -5,24 +5,66 @@
 {% endblock title %}
         
 {% block content %}
-        <h1>Welcome to the Budget Tracker Page</h1>
-
-        
-        {% for exp in expenses %}
-            <article class="media content-section">
-                <div class="media-body">     
-                    <div class="article-metadata">
-                        <small class="text-muted">{{ exp.date_incurred|date:"N d, Y" }}</small>
-                    </div>
-                    <p class="article-content">{{ exp.amount }}</p>
-                    <br>
-                    <h2><a class="article-title" href="{% url 'post-detail' exp.pk %}">{{ exp.description }}</a></h2>
-                    
-                </div>
-            </article>
+        <div class="home-banner">
+            <h1>Welcome to the Budget Tracker Page</h1>
+            <p>Track your stipends and expenses efficiently.</p>
+            <br>
+            <div class='home-buttons'>
+                <h2><u>Your Expenses</u></h2> 
+                <a href="{% url 'expense-create' %}" class="btn">Add New Expense</a>
+                <a href="{% url 'expense-list' %}" class="btn btn-sec">View All Expenses</a>
+            </div>
             
-        {% endfor %}
+        </div>
         
 
-        
+
+        <br>
+        <div class="stipend-section">
+            <div class="expense-section">
+ 
+                {% for stip in stipend %}
+                        <h2>{{ stip.name }} - ${{ stip.stipend_amount }} </h2>
+                        {% for exp in exps %}
+                            {% if exp.stipend.id == stip.id %}
+                                
+                                <div class="article-metadata">
+                                    <small>Expense Category:  {{ exp.category }}</small>
+                            
+                                    <h5>{{ exp.description }} - ${{exp.amount}}</h5>
+                                    <small class="text-muted">On: {{ exp.date_incurred|date:"N d, Y" }}</small>
+                                    <hr>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                {% endfor %}
+            </div>
+
+            
+            <div class="chart-section">
+                <br>
+                <h1>Expense Chart</h1>
+                
+                <br>
+            
+                <canvas id="expenseChart" class="expense-chart" ></canvas>            
+                <script>
+                    const categories = {{ categories|safe }};
+                    const totals = {{ totals|safe }};
+
+                    const ctx = document.getElementById('expenseChart');
+
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: categories,
+                            datasets: [{
+                                data: totals,
+                            }]
+                        },
+                    });
+                </script>
+            </div>
+        </div>
+
 {% endblock content %}

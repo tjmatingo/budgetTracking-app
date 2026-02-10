@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "budgetrack.apps.BudgetrackConfig",
-    "account.apps.AccountConfig",
+    "users.apps.UsersConfig",
     "drf_spectacular",
     ]
 
@@ -121,7 +121,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
-AUTH_USER_MODEL = 'account.Account'
+# AUTH_USER_MODEL = 'users.Users'
 
 # API setup
 REST_FRAMEWORK = {

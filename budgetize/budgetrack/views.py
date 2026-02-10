@@ -13,7 +13,7 @@ class ExpensesListViewSet(viewsets.ViewSet):
     queryset = Expense.objects.all()
     incomequery = IncomeStream.objects.all()
 
-    @server_list_docs
+    # @server_list_docs
     def list(self, request):
         """schema comes here
         """

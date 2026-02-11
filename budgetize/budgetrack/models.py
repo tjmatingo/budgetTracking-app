@@ -36,7 +36,7 @@ class IncomeStream(models.Model):
 
 
     def __str__(self):
-        return f"{self.name} - {self.amount} {self.currency}"
+        return f"{self.title} - {self.amount} {self.currency}"
     
 
 class Expense(models.Model):
@@ -71,13 +71,16 @@ class Expense(models.Model):
                 f"Expense exceeds remaining balance ({available_balance})."
             )
         
-
+    def delete(self, *args, **kwargs):
+        income_stream = self.income_stream
+        super().delete(*args, **kwargs)
+        income_stream.update_remaining_balance()
 
     def save(self, *args, **kwargs):
         self.clean()  # ensure validation runs on save
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name} expense - {self.amount}"
+        return f"{self.title} expense - {self.amount}, remaining: ${self.income_stream.update_remaining_balance}"
     
     

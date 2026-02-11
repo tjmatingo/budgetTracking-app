@@ -20,7 +20,7 @@ class ExpensesListViewSet(viewsets.ViewSet):
         # Sample data representing servers
         IncomeStream = request.query_params.get('income_stream')
         amount = request.query_params.get('amount') # default to 10 if not provided
-        title = request.query_params.get('name') 
+        title = request.query_params.get('title') 
         category = request.query_params.get('category')
         date = request.query_params.get("date")
         currency = request.query_params.get("currecncy")

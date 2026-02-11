@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Sum
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class IncomeStream(models.Model):
@@ -8,8 +10,30 @@ class IncomeStream(models.Model):
         max_length=20,
         choices=[('daily','Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')]
     )
+    remaining_balance = models.DecimalField(
+    max_digits=12,
+    decimal_places=2,
+    editable=False
+    )
     start_date = models.DateField()  # When the income stream started    
     currency = models.CharField(max_length=10, default='USD')
+
+
+    def update_remaining_balance(self):
+        total_expenses = self.expenses.aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+
+        self.remaining_balance = self.amount - total_expenses
+        self.save(update_fields=['remaining_balance'])
+
+    def save(self, *args, **kwargs):
+        # On first save, remaining balance = full income
+        if self.pk is None:
+            self.remaining_balance = self.amount
+        super().save(*args, **kwargs)
+
+
 
     def __str__(self):
         return f"{self.name} - {self.amount} {self.currency}"
@@ -33,17 +57,22 @@ class Expense(models.Model):
     paid = models.BooleanField(default=True)  # Has this expense been paid?
 
 
-    def clean(self):
-        # Calculate total expenses for this income stream (excluding this instance if updating)
-        total_expenses = self.income_stream.expenses.exclude(pk=self.pk).aggregate(
-            total=models.Sum('amount')
-        )['total'] or 0
 
-        if total_expenses + self.amount > self.income_stream.amount:
+    def clean(self):
+        # Remaining balance excluding this expense (important for updates)
+        available_balance = self.income_stream.remaining_balance
+
+        if self.pk:
+            previous_amount = Expense.objects.get(pk=self.pk).amount
+            available_balance += previous_amount
+
+        if self.amount > available_balance:
             raise ValidationError(
-                f"Total expenses ({total_expenses + self.amount}) is more than the income ({self.income_stream.amount})."
+                f"Expense exceeds remaining balance ({available_balance})."
             )
         
+
+
     def save(self, *args, **kwargs):
         self.clean()  # ensure validation runs on save
         super().save(*args, **kwargs)

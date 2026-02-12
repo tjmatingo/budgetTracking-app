@@ -80,7 +80,9 @@ class Expense(models.Model):
         self.clean()  # ensure validation runs on save
         super().save(*args, **kwargs)
 
+        self.income_stream.update_remaining_balance()
+
     def __str__(self):
-        return f"{self.title} expense - {self.amount}, remaining: ${self.income_stream.update_remaining_balance}"
+        return f"{self.title} expense - {self.amount}, remaining: ${self.income_stream.remaining_balance}"
     
-    
+     
